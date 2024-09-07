@@ -38,6 +38,12 @@ export const BaseCountdownButton = styled.button`
   }
 `;
 
+export const Controls = styled.div`
+  width: 6rem;
+  border: 1px solid ${(props) => props.theme["green-500"]};
+  border-radius: 8px;
+`;
+
 export const StartCountdownButton = styled(BaseCountdownButton)`
   background: ${(props) => props.theme["green-500"]};
 

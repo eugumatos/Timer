@@ -9,8 +9,10 @@ import { differenceInSeconds } from "date-fns";
 import { cyclesReducer, Cycle } from "../reducers/cycles/reducer";
 import {
   addNewCycleAction,
+  addOneMinuteToCycleAction,
   markCurrentCycleAsFinishedAction,
   interruptCurrentCycleAction,
+  lessOneMinuteFromCycleAction,
 } from "../reducers/cycles/actions";
 
 interface CreateCycleData {
@@ -27,6 +29,9 @@ interface CyclesContextType {
   setSecondsPassed: (seconds: number) => void;
   createNewCycle: (data: CreateCycleData) => void;
   interruptCurrentCycle: () => void;
+  nextQueeCycle: () => void;
+  addOneMinuteToCycle: () => void;
+  lessOneMinuteToCycle: () => void;
 }
 
 export const CyclesContext = createContext({} as CyclesContextType);
@@ -59,6 +64,8 @@ export function CyclesContextProvider({
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId);
 
+  const [queuedCycles, setQueuedCycles] = useState<Cycle[]>([]);
+
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(() => {
     if (activeCycle) {
       return differenceInSeconds(new Date(), new Date(activeCycle.startDate));
@@ -85,6 +92,11 @@ export function CyclesContextProvider({
       startDate: new Date(),
     };
 
+    if (activeCycle) {
+      setQueuedCycles((prevQueuedCycles) => [...prevQueuedCycles, newCycle]);
+      return;
+    }
+
     dispatch(addNewCycleAction(newCycle));
 
     setAmountSecondsPassed(0);
@@ -92,6 +104,28 @@ export function CyclesContextProvider({
 
   function interruptCurrentCycle() {
     dispatch(interruptCurrentCycleAction());
+    setAmountSecondsPassed(0);
+  }
+
+  function nextQueeCycle() {
+    if (queuedCycles.length > 0) {
+      const [nextCycle, ...remainingCycles] = queuedCycles;
+      dispatch(addNewCycleAction(nextCycle));
+      setQueuedCycles(remainingCycles); // Update the queue to remove the dispatched cycle
+      setAmountSecondsPassed(0);
+    }
+  }
+
+  function addOneMinuteToCycle() {
+    if (activeCycle) {
+      dispatch(addOneMinuteToCycleAction(activeCycle.id));
+    }
+  }
+
+  function lessOneMinuteToCycle() {
+    if (activeCycle) {
+      dispatch(lessOneMinuteFromCycleAction(activeCycle.id));
+    }
   }
 
   useEffect(() => {
@@ -111,6 +145,9 @@ export function CyclesContextProvider({
         setSecondsPassed,
         createNewCycle,
         interruptCurrentCycle,
+        addOneMinuteToCycle,
+        lessOneMinuteToCycle,
+        nextQueeCycle,
       }}
     >
       {children}

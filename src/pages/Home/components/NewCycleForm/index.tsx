@@ -1,28 +1,27 @@
-import { FormContainer, TaskInput, MinutesAmountInput } from "./styles";
-import { useContext } from "react";
-import { CyclesContext } from "../../../../contexts/CyclesContext";
 import { useFormContext } from "react-hook-form";
+import { FormContainer, MinutesAmountInput, TaskInput } from "./styles";
 
 export function NewCycleForm() {
-  const { activeCycle } = useContext(CyclesContext);
   const { register } = useFormContext();
 
   return (
     <FormContainer>
-      <label htmlFor="task">I'll work at</label>
+      <label htmlFor="task">Set timer to</label>
       <TaskInput
         id="task"
         list="task-sugestions"
         placeholder="Project Name"
-        disabled={!!activeCycle}
+        // disabled={!!activeCycle}
         {...register("task")}
       />
 
       <datalist id="task-sugestions">
-        <option value="Project 1" />
-        <option value="Project 2" />
-        <option value="Project 3" />
-        <option value="Project 4" />
+        <option value="Abertura" />
+        <option value="Adoração" />
+        <option value="Oferta" />
+        <option value="Fluxo oferta" />
+        <option value="Avisos / Transição" />
+        <option value="Ministração" />
       </datalist>
 
       <label htmlFor="minutesAmount">during</label>
@@ -30,14 +29,25 @@ export function NewCycleForm() {
         type="number"
         id="minutesAmount"
         placeholder="00"
-        step={5}
-        min={5}
+        // step={5}
+        min={1}
         max={60}
-        disabled={!!activeCycle}
+        // disabled={!!activeCycle}
         {...register("minutesAmount", { valueAsNumber: true })}
       />
 
       <span>minutes.</span>
+
+      {/* 
+      <QueeButtonContainer>
+        <QueeButton type="submit">
+          <PlusCircle size={30} />
+        </QueeButton>
+        <QueeButton type="button" onClick={nextQueeCycle}>
+          <ArrowCircleRight size={30} />
+        </QueeButton>
+      </QueeButtonContainer>
+    */}
     </FormContainer>
   );
 }

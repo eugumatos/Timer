@@ -43,3 +43,24 @@ export const TaskInput = styled(BaseInput)`
 export const MinutesAmountInput = styled(BaseInput)`
   width: 4rem;
 `;
+
+export const QueeButtonContainer = styled.div`
+  display: flex;
+  gap: 2px;
+`;
+
+export const QueeButton = styled.button`
+  background: transparent;
+  color: ${(props) => props.theme["gray-400"]};
+  font-weight: bold;
+  padding: 5px;
+  border: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 2px;
+
+  border-radius: 90%;
+`;

@@ -51,6 +51,34 @@ export function cyclesReducer(state: CyclesState, action: any) {
         draft.cycles[currentCycleIndex].finishedDate = new Date();
       });
     }
+    case ActionTypes.ADD_ONE_MINUTE_TO_CYCLE: {
+      const currentCycleIndex = state.cycles.findIndex((cycle) => {
+        return cycle.id === state.activeCycleId;
+      });
+
+      if (currentCycleIndex < 0) {
+        return state;
+      }
+
+      return produce(state, (draft) => {
+        draft.cycles[currentCycleIndex].minutesAmount += 1;
+      });
+    }
+    case ActionTypes.LESS_ONE_MINUTE_TO_CYCLE: {
+      const currentCycleIndex = state.cycles.findIndex((cycle) => {
+        return cycle.id === state.activeCycleId;
+      });
+
+      if (currentCycleIndex < 0) {
+        return state;
+      }
+
+      return produce(state, (draft) => {
+        if (draft.cycles[currentCycleIndex].minutesAmount > 1) {
+          draft.cycles[currentCycleIndex].minutesAmount -= 1;
+        }
+      });
+    }
 
     default:
       return state;
